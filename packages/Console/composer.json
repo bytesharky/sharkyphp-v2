@@ -1,0 +1,39 @@
+{
+    "name": "sharkyphp/console",
+    "description": "SharkyPHP console, build command-line CLI applications.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Sharky\\Console\\": "src"
+        }
+    },
+    "authors": [
+        {
+            "name": "bytesharky",
+            "email": "fish@doffish.com"
+        }
+    ],
+    "extra": {
+        "sharky-config": "sharky-config.php"
+    },
+    "require": {
+        "php": ">=8.2",
+        "sharkyphp/annotation": "^2.0.0",
+        "sharkyphp/contracts": "^2.0.0",
+        "sharkyphp/facade": "^2.0.0",
+        "sharkyphp/pipeline": "^2.0.0",
+        "sharkyphp/support": "^2.0.0"
+    },
+    "archive": {
+        "exclude": [
+            "docs/",
+            "tests/",
+            ".github/",
+            ".gitignore",
+            "composer.lock",
+            "vendor/",
+            ".env"
+        ]
+    }
+}

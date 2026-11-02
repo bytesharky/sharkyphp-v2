@@ -1,0 +1,31 @@
+{
+    "name": "sharkyphp/support",
+    "description": "SharkyPHP support, provides array, string, helper and base type tools for SharkyPHP framework.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Sharky\\Support\\": "src"
+        }
+    },
+    "authors": [
+        {
+            "name": "bytesharky",
+            "email": "fish@doffish.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.2"
+    },
+    "archive": {
+        "exclude": [
+            "docs/",
+            "tests/",
+            ".github/",
+            ".gitignore",
+            "composer.lock",
+            "vendor/",
+            ".env"
+        ]
+    }
+}

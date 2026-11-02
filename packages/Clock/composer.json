@@ -1,0 +1,38 @@
+{
+    "name": "sharkyphp/clock",
+    "description": "SharkyPHP clock, Easy to mock the wall clock time for repeatability.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Sharky\\Clock\\": "src"
+        },
+        "files": [
+            "src/Exceptions/DateMalformedStringException.php"
+        ]
+    },
+    "authors": [
+        {
+            "name": "bytesharky",
+            "email": "fish@doffish.com"
+        }
+    ],
+    "extra": {
+        "sharky-config": "sharky-config.php"
+    },
+    "require": {
+        "php": ">=8.2",
+        "psr/clock": "^1.0"
+    },
+    "archive": {
+        "exclude": [
+            "docs/",
+            "tests/",
+            ".github/",
+            ".gitignore",
+            "composer.lock",
+            "vendor/",
+            ".env"
+        ]
+    }
+}

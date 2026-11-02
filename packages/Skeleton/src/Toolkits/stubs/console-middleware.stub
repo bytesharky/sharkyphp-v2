@@ -1,0 +1,36 @@
+<?php
+declare (strict_types = 1);
+
+namespace {{ namespace }};
+
+use Sharky\Console\Context\Input;
+{{ uses }}
+
+/**
+ * 命令行中间件模板
+ * 执行顺序：前置逻辑 -> $next($argvInput) 执行命令 -> 后置逻辑
+ * 生效范围：全局（configs/middleware.php 的 console 段）或单个命令（#[Middleware] 注解）
+ * 注意：与 HTTP 中间件不通用，两者入参（Input / ServerRequestInterface）和所处链路不同
+ */
+class {{ class }} implements MiddlewareInterface
+{
+    /**
+     * 中间件处理入口
+     * @param Input $argvInput 解析后的命令行输入
+     * @param callable $next 下游调用（下一个中间件 / 命令处理器）
+     * @return mixed 命令处理器的返回值
+     */
+    public function process(Input $argvInput, callable $next): mixed
+    {
+        // 【前置阶段】命令已匹配、尚未执行
+        // 可做：环境校验、危险命令二次确认、开始计时、参数规整
+        // 需要中断时直接 return（不再调用 $next），命令不会执行
+
+        $result = $next($argvInput);
+
+        // 【后置阶段】命令正常执行完成（抛异常时不会走到这里）
+        // 可做：耗时统计、执行记录落库
+
+        return $result;
+    }
+}

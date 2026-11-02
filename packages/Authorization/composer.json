@@ -1,0 +1,31 @@
+{
+    "name": "sharkyphp/authorization",
+    "description": "SharkyPHP authorization, JWT and TOTP (MFA) utilities for credential verification",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Sharky\\Authorization\\": "src"
+        }
+    },
+    "authors": [
+        {
+            "name": "bytesharky",
+            "email": "fish@doffish.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.2"
+    },
+    "archive": {
+        "exclude": [
+            "docs/",
+            "tests/",
+            ".github/",
+            ".gitignore",
+            "composer.lock",
+            "vendor/",
+            ".env"
+        ]
+    }
+}

@@ -1,0 +1,45 @@
+<?php
+declare (strict_types = 1);
+
+namespace {{ namespace }};
+
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+{{ uses }}
+
+/**
+ * HTTP 中间件模板
+ * 执行顺序：前置逻辑 -> 调用$next(传递请求)获取响应 -> 后置逻辑 -> 返回响应
+ * 可用于：请求过滤、登录校验、请求头处理、跨域、日志记录等通用横切逻辑
+ * 注意：业务权限校验建议放在业务层，中间件只做通用拦截
+ */
+class {{ class }} implements MiddlewareInterface
+{
+    /**
+     * 中间件处理入口
+     * @param ServerRequestInterface $request PSR7 请求对象
+     * @param callable $next 下游调用回调（下一个中间件 / 控制器）
+     * @return ResponseInterface PSR7 响应对象
+     */
+    public function process(ServerRequestInterface $request, callable $next): ResponseInterface
+    {
+        /**
+         * 【前置阶段】
+         * 在路由匹配、控制器执行之前执行
+         * 可做：参数预处理、请求验证、身份识别、CORS预检处理
+         * 若校验失败，可直接return新Response终止链路，不再执行$next
+         */
+
+        // 执行下游：进入下一层中间件，直到控制器执行并拿到响应
+        $response = $next($request);
+
+        /**
+         * 【后置阶段】
+         * 控制器执行完成、拿到响应对象后执行
+         * 可做：响应头追加、响应内容修改、访问日志记录
+         */
+
+        // 返回处理后的响应对象
+        return $response;
+    }
+}

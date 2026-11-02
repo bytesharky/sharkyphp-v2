@@ -1,0 +1,31 @@
+<?php
+declare (strict_types = 1);
+
+namespace {{ namespace }};
+
+use Sharky\Annotation\Command;
+use Sharky\Console\Context\Input;
+use Sharky\Console\Context\Output;
+
+/**
+ * 命令行指令模板
+ * 职责：CLI 入口，接收控制台输入、输出打印
+ * 原则：仅处理控制台 IO；依赖按需在构造声明，由 DI 注入
+ */
+#[Command(name: '{{ command }}', desc: 'TODO: describe {{ command }}')]
+class {{ class }}
+{
+    public function execute(Input $argvInput, Output $output): void
+    {
+        $output->successLn('{{ class }}');
+
+        // 位置参数：php sharky {{ command }} foo
+        $output->writeln(sprintf('argument 0: %s', (string) $argvInput->getArgument(0, '')));
+        $output->writeln(sprintf('has argument 0: %s', $argvInput->hasArgument(0) ? 'yes' : 'no'));
+        $output->writeln(sprintf('arguments: %s', implode(', ', $argvInput->getArguments())));
+
+        // 选项：php sharky {{ command }} --name=sharky --force
+        $output->writeln(sprintf('option name: %s', (string) $argvInput->getOption('name', '')));
+        $output->writeln(sprintf('has option force: %s', $argvInput->hasOption('force') ? 'yes' : 'no'));
+    }
+}

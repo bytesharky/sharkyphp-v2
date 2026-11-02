@@ -1,0 +1,30 @@
+{
+    "name": "sharkyphp/contracts",
+    "description": "SharkyPHP contracts, shared interfaces for framework components.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Sharky\\Contracts\\": "src"
+        }
+    },
+    "authors": [
+        {
+            "name": "bytesharky",
+            "email": "fish@doffish.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=8.2"
+    },
+    "archive": {
+        "exclude": [
+            "docs/",
+            "tests/",
+            ".github/",
+            ".gitignore"
+        ]
+    }
+}

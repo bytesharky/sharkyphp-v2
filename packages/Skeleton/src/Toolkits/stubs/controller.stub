@@ -1,0 +1,45 @@
+<?php
+declare (strict_types = 1);
+
+namespace {{ namespace }};
+
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+
+/**
+ * 控制器模板
+ * 职责：接收 HTTP 请求、组装参数、调用业务服务、返回响应
+ * 原则：只做请求/响应编排，不要写厚重业务逻辑，业务下沉到 Service 层
+ * 路由注解标记当前类/方法路由，路由仅负责寻址；权限校验放在业务层
+ */
+class {{ class }}
+{
+    /**
+     * 默认动作
+     * @param ServerRequestInterface $request PSR7 请求实例
+     * @return ResponseInterface PSR7 响应实例
+     */
+    public function index(ServerRequestInterface $request): ResponseInterface
+    {
+        // 1. 获取请求数据：getQueryParams() / getParsedBody() / getHeaderLine()
+        //$params = $request->getQueryParams();
+
+        // 2. 调用业务服务，获取结果
+        //$result = $this->service->xxx($params);
+
+        // 3. 构造并返回响应（response() 为全局助手，不带参返回 HttpFactory）
+        return response()->json(['controller' => '{{ class }}']);
+    }
+
+    /**
+     * 详情动作（路由参数示例：/detail/{id}）
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
+    public function detail(ServerRequestInterface $request): ResponseInterface
+    {
+        $id = $request->getAttribute('id');
+
+        return response()->json(['id' => $id]);
+    }
+}

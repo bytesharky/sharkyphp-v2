@@ -1,0 +1,39 @@
+{
+    "name": "sharkyphp/runtime-swoole",
+    "description": "SharkyPHP runtime-swoole, Swoole coroutine runtime adapter.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Sharky\\Runtime\\Storage\\": "src/Storage",
+            "Sharky\\Runtime\\Swoole\\": "src/Swoole"
+        }
+    },
+    "authors": [
+        {
+            "name": "bytesharky",
+            "email": "fish@doffish.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.2",
+        "sharkyphp/contracts": "^2.0.0",
+        "sharkyphp/event": "^2.0.0",
+        "sharkyphp/facade": "^2.0.0",
+        "sharkyphp/foundation": "^2.0.0"
+    },
+    "suggest": {
+        "ext-swoole": ">=5.0"
+    },
+    "archive": {
+        "exclude": [
+            "docs/",
+            "tests/",
+            ".github/",
+            ".gitignore",
+            "composer.lock",
+            "vendor/",
+            ".env"
+        ]
+    }
+}

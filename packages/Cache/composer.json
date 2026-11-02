@@ -1,0 +1,33 @@
+{
+    "name": "sharkyphp/cache",
+    "description": "SharkyPHP cache, provides PSR-6/PSR-16 cache implementation.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Sharky\\Cache\\": "src"
+        }
+    },
+    "authors": [
+        {
+            "name": "bytesharky",
+            "email": "fish@doffish.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.2",
+        "psr/simple-cache": "^3.0",
+        "sharkyphp/redis": "^2.0.0"
+    },
+    "archive": {
+        "exclude": [
+            "docs/",
+            "tests/",
+            ".github/",
+            ".gitignore",
+            "composer.lock",
+            "vendor/",
+            ".env"
+        ]
+    }
+}

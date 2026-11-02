@@ -1,0 +1,20 @@
+<?php
+declare (strict_types = 1);
+
+namespace {{ namespace }};
+
+use Sharky\Database\Model;
+
+/**
+ * 数据模型模板
+ * 职责：映射数据表结构、字段类型转换、基础字段访问
+ * 原则：
+ * 1. Model 只负责承载数据，**禁止写入复杂业务逻辑**，业务放 Service
+ * 2. 仅保留：字段定义、类型转换、只读访问器、表名、主键配置
+ * 3. 不内置查询构造器，查询/CRUD 操作交给 Repository 层
+ */
+class {{ class }} extends Model
+{
+    /** 数据表名称（不含前缀），按需修改 */
+    public const TABLE = '{{ table }}';
+}
