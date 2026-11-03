@@ -54,8 +54,8 @@ SharkyPHP 以独立包的形式发布于 `framework/packages/`，主要包括：
 
 - **作者：** ByteSharky `<fish@doffish.com>`
 - **演示站点：** <https://sharky.doffish.com/>
-- **GitHub：** <https://github.com/bytesharky/sharky-php-v2>
-- **Gitee：** <https://gitee.com/bytesharky/sharky-php-v2>
+- **GitHub：** <https://github.com/bytesharky/sharkyphp-v2>
+- **Gitee：** <https://gitee.com/bytesharky/sharkyphp-v2>
 
 ---
 

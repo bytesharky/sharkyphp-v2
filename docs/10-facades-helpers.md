@@ -53,6 +53,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 $request = Context::getRequest();          // current request (ServerRequestInterface)
 Context::setRequest($request);             // set (the kernel sets this automatically when dispatching routes)
+$output  = Context::getOutput();           // current console Output (the kernel sets this before a command runs)
+Context::setOutput($output);               // set
 Context::get('trace_id', null);            // custom context value
 Context::set('trace_id', 'abc');
 ```

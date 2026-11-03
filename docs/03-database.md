@@ -13,7 +13,7 @@ use Sharky\Database\Database;
 use Sharky\Database\Model;
 use Sharky\Facade\Config;
 
-$connection = Database::connect('master');   // Facade: default connection = first node of hosts
+$connection = Database::connect();   // No argument resolves to the first node of `hosts`; pass a name to select a specific node
 Model::setConnection($connection);
 ```
 
@@ -21,10 +21,12 @@ You can also instantiate the manager directly:
 
 ```php
 $db = new Database(Config::get('database.default'));
-$connection = $db->connect('master');
+$connection = $db->connect();   // same default-node resolution as above
 ```
 
 Connection configuration is in `configs/database.php` (`type` / `driver` / `hosts.{master,slave}` / `prefix` / `charset`, etc.).
+
+> **Connection resilience**: long-lived connections auto-reconnect when the underlying link drops ("server has gone away", lost connection, broken pipe, etc.). This applies to **both** the PDO and MySQLi drivers. No reconnect is attempted while a transaction is open, to preserve atomicity.
 
 ## 2. Model (ActiveRecord)
 
@@ -80,7 +82,12 @@ User::query()->where(['id' => 1])->paginate(1, 20);    // Pagination array
 ->where(function ($q) {                             // Closure = nested parenthesis grouping
     $q->where(['a' => 1])->orWhere(['b' => 2]);
 })
+->whereOr([['c' => 1], ['d' => 2]])                 // OR alias of orWhere
+->whereIf($keyword !== '', ['name' => ['like', "%{$keyword}%"]])  // append only when condition is truthy
 ```
+
+- `where([])` (an empty array) is **silently ignored** — no `WHERE` clause is generated and no exception is thrown. This makes the common "optional filter" pattern (`$cond ? ['col' => $cond] : []`) safe without pre-checking.
+- `whereIf($condition, $clause)` appends `$clause` only when `$condition` is truthy — handy for optional filters. `whereOr(...)` is an alias of `orWhere(...)`.
 
 Supported operators: `= != <> > < >= <= & | ^ ~ << >> LIKE NOT LIKE`, as well as `IN / NOT IN`, `IS / IS NOT`, `BETWEEN / NOT BETWEEN`. When the value is `null`, `=` / `!=` automatically convert to `IS NULL / IS NOT NULL`.
 
@@ -103,6 +110,7 @@ $u->delete();                                                // Delete the curre
 
 - `save()` automatically chooses insert / update based on whether a primary key exists and whether the record is in the database, and only writes the changed fields.
 - `$fillable` controls which fields `save()` allows to be written via mass assignment.
+- Writes are additionally filtered against the **real table columns** (not just `$fillable`): any key that is not an actual column is dropped before the SQL is built, so stray keys never cause an `Unknown column` error.
 
 ### Model Objects
 
@@ -110,6 +118,23 @@ $u->delete();                                                // Delete the curre
 - Serialization: `$u->toArray()` (hides `$hidden` fields); implements `JsonSerializable`, so it can be `json_encode`d directly.
 - Constructing from a result row: `User::newFromRow($row)` (preserves join columns for union queries).
 - Meta info: `$u->getFields()`, `$u->getPrimarys()`, `$u->getTable()`, `$u->getFullTable()`.
+
+### Joins
+
+`leftJoin` / `join` accept a `[table, alias]` pair. The table may be a **Model class name**, which is resolved to its real table (with prefix) automatically — so cross-prefix joins work without manual table-name juggling:
+
+```php
+use App\Models\Order;
+use App\Models\User;
+
+Order::query()
+    ->alias('o')
+    ->leftJoin([User::class, 'u'], 'u.id = o.user_id')
+    ->where(['u.status' => 1])
+    ->get();
+```
+
+Passing a non-Model class name raises a clear error instead of producing an invalid SQL table name.
 
 ## 3. Collection
 

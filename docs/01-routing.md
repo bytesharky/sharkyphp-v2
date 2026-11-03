@@ -33,6 +33,8 @@ Route::addRoute('ANY', '/extension', [SharkyDemo::class, 'extension']);
 
 Use `(name)` in the path to declare a parameter that matches `[^/]+`, and `(name:regex)` to customize the matching rule. The matched value is injected into the controller method by **parameter name**.
 
+The curly-brace form `{name}` / `{name:regex}` is also supported and is equivalent to `(name)` / `(name:regex)`.
+
 ```php
 Route::addRoute('GET', '/(id:\d+)', [SharkyDemo::class, 'show']);
 Route::addRoute('DELETE', '/(id)', [SharkyDemo::class, 'delete'])->where(['id' => '\d']);
@@ -128,6 +130,8 @@ Declaration registration still returns a `Route` instance (so `where()` can atta
 
 OPTIONS requests are handled centrally by the kernel: it first tries to match an OPTIONS route you registered; if none matches, it automatically returns a 204 preflight response based on `response.cors.allow-headers` in `configs/config.php` (when `response.cors.auto-options` is `true`). `Access-Control-Allow-Methods` is derived automatically from the routes.
 
+Allowed origins can be restricted via `http.response.cors.whitelist` (an array; `*` matches any origin, e.g. `http://127.0.0.1:*` or `https://*.example.com`). When an incoming `Origin` matches a whitelist entry, the kernel echoes it back in `Access-Control-Allow-Origin` (with `Vary: Origin`); otherwise the header is omitted. With `allow-credentials` enabled, `Access-Control-Allow-Credentials: true` is appended.
+
 ## 6.1 HEAD Requests
 
 `HEAD` is semantically identical to `GET`, so you **never need to register a HEAD route**: when no `HEAD` route is declared, matching falls back to the `GET` route for the same path, and the kernel emits every response header (including `Content-Length`) but **no response body**.
@@ -149,6 +153,7 @@ use Sharky\Annotation\Http\Post;
 use Sharky\Annotation\Middleware;
 
 #[Controller(name: 'demo')]                 // class level: controller name (metadata only)
+#[Controller(name: 'demo', prefix: '/api/v1')]  // optional prefix is auto-prepended to every method route below
 #[Middleware(name: AuthMiddleware::class)]  // class level: applies to every route below
 class Demo
 {
@@ -163,6 +168,8 @@ class Demo
 
 - A `#[Route(path: '...')]` without `method` is treated as `ANY`;
 - Middleware order: class level `#[Middleware]` -> route attribute `middleware` -> method level `#[Middleware]` (duplicates removed);
+- `#[Middleware(...)]` may be **repeated** on the same class or method; all instances are collected (stacking multiple no longer silently drops them).
+- If an attribute cannot be instantiated (e.g. a missing/invalid argument), `RouteScanner` now throws a contextual `RuntimeException` instead of silently ignoring the whole route — failures surface immediately.
 - Scan directories come from `routing.scan` in `configs/http.php`, defaulting to `App\Http\Controllers`;
 - Annotation routes take part in conflict detection and cache export exactly like route files.
 

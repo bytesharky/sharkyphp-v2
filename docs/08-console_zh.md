@@ -11,13 +11,15 @@ SharkyPHP 用同一内核处理 CLI 命令。命令由「工具集类（Toolkit�
 ```php
 namespace App\Console\Toolkits;
 
-use Sharky\Console\Context\Output;
+use Sharky\Facade\Context;
 
 class DemoToolkit
 {
     public function helloWord()
     {
-        $out = new Output();
+        // 内核在派发前会注入一个 Output 实例并绑定到容器；
+        // 通过 Context 门面获取（非命令上下文下回退为新实例）。
+        $out = Context::getOutput();
         $out->infoLn('Hello, SharkyPHP!');
     }
 }
@@ -188,7 +190,7 @@ public function execute(Input $argvInput, Output $output): void
 ## 终端输出（`Sharky\Console\Context\Output`）
 
 ```php
-$out = new Output();
+$out = Context::getOutput();   // 内核注入的实例；无则回退为 new Output()
 $out->setVerbosity(Output::VERBOSITY_DEBUG);   // QUIET / NORMAL / VERBOSE / DEBUG
 
 $out->info('普通信息');        $out->infoLn('普通信息');

@@ -11,13 +11,16 @@ A toolkit is an ordinary class; its public methods are the command actions:
 ```php
 namespace App\Console\Toolkits;
 
-use Sharky\Console\Context\Output;
+use Sharky\Facade\Context;
 
 class DemoToolkit
 {
     public function helloWord()
     {
-        $out = new Output();
+        // The kernel injects an Output instance and binds it to the container
+        // before dispatch; fetch it via the Context facade (falls back to a new
+        // instance when called outside a command).
+        $out = Context::getOutput();
         $out->infoLn('Hello, SharkyPHP!');
     }
 }
@@ -188,7 +191,7 @@ public function execute(Input $argvInput, Output $output): void
 ## Terminal Output (`Sharky\Console\Context\Output`)
 
 ```php
-$out = new Output();
+$out = Context::getOutput();   // kernel-injected instance; falls back to `new Output()` if none
 $out->setVerbosity(Output::VERBOSITY_DEBUG);   // QUIET / NORMAL / VERBOSE / DEBUG
 
 $out->info('normal info');        $out->infoLn('normal info');

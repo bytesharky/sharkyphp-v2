@@ -54,8 +54,8 @@ Comprehensive, user-facing usage documentation is maintained under [`docs/`](./d
 
 - **Author:** ByteSharky `<fish@doffish.com>`
 - **Demo:** <https://sharky.doffish.com/>
-- **GitHub:** <https://github.com/bytesharky/sharky-php-v2>
-- **Gitee:** <https://gitee.com/bytesharky/sharky-php-v2>
+- **GitHub:** <https://github.com/bytesharky/sharkyphp-v2>
+- **Gitee:** <https://gitee.com/bytesharky/sharkyphp-v2>
 
 ---
 

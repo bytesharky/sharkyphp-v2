@@ -34,7 +34,7 @@ class SharkyDemo
 
 | 属性 | 目标 | 参数 |
 | --- | --- | --- |
-| `#[Controller(name)]` | 类 / 方法 | `name`：控制器名 |
+| `#[Controller(name, prefix='')]` | 类 / 方法 | `name`：控制器名；`prefix`（可选）：自动拼到本控制器下所有方法路由 path 前 |
 | `#[Route(path, method=[], middleware=[])]` | 方法 | 路径、方法数组、中间件数组 |
 | `#[Get(path, middleware=[])]` | 方法 | `method` 固定 `['Get']` |
 | `#[Post(path, middleware=[])]` | 方法 | `method` 固定 `['Post']` |
@@ -49,7 +49,7 @@ class SharkyDemo
 #[Permission(rule: 'user:read')]     // 类或方法级：声明所需权限
 ```
 
-- `#[Middleware(name)]`：可作用于类（整控制器）或方法（单动作），`name` 为中间件标识。
+- `#[Middleware(name)]`：可作用于类（整控制器）或方法（单动作），`name` 为中间件标识。该注解为 `IS_REPEATABLE`，同一类或方法上可叠多个 `#[Middleware(...)]` 且都会被收集（不再因重复声明被静默丢弃）。
 - `#[Permission(rule)]`：声明该处需要的权限规则字符串，供权限校验层消费。
 
 ## 命令注解

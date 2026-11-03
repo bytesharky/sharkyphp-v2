@@ -33,6 +33,8 @@ Route::addRoute('ANY', '/extension', [SharkyDemo::class, 'extension']);
 
 路径中用 `(name)` 声明一个匹配 `[^/]+` 的参数，用 `(name:正则)` 自定义匹配规则。匹配到的值会按**参数名**注入到控制器方法。
 
+花括号写法 `{name}` / `{name:正则}` 同样支持，与 `(name)` / `(name:正则)` 等价。
+
 ```php
 Route::addRoute('GET', '/(id:\d+)', [SharkyDemo::class, 'show']);
 Route::addRoute('DELETE', '/(id)', [SharkyDemo::class, 'delete'])->where(['id' => '\d']);
@@ -128,6 +130,8 @@ $directory = Container::get('project.directory');   // 项目根目录
 
 OPTIONS 请求由内核统一处理：优先匹配你注册的 OPTIONS 路由；未匹配时，按 `configs/http.php` 中 `response.cors.allow-headers` 自动返回 204 预检响应（`response.cors.auto-options` 为 `true` 时）。`Access-Control-Allow-Methods` 由路由自动推导。
 
+允许的源（Origin）可通过 `http.response.cors.whitelist` 限制（数组；`*` 通配任意源，如 `http://127.0.0.1:*` 或 `https://*.example.com`）。当请求的 `Origin` 命中白名单时，内核在响应头回显该 `Origin`（并带 `Vary: Origin`）；未命中则省略该头。开启 `allow-credentials` 时，追加 `Access-Control-Allow-Credentials: true`。
+
 ## 6.1 HEAD 请求
 
 `HEAD` 语义上等同于 `GET`，因此**不需要单独注册 HEAD 路由**：匹配阶段若未声明 `HEAD`，自动回落到同路径的 `GET` 路由；内核在输出时保留全部响应头（含 `Content-Length`）但**不输出响应体**。
@@ -149,6 +153,7 @@ use Sharky\Annotation\Http\Post;
 use Sharky\Annotation\Middleware;
 
 #[Controller(name: 'demo')]                 // 类级：控制器名称（仅元数据）
+#[Controller(name: 'demo', prefix: '/api/v1')]  // 可选 prefix：自动拼到本控制器下所有方法路由 path 前
 #[Middleware(name: AuthMiddleware::class)]  // 类级：本控制器全部路由生效
 class Demo
 {
@@ -163,6 +168,8 @@ class Demo
 
 - 未声明 `method` 的 `#[Route(path: '...')]` 按 `ANY` 处理；
 - 中间件合并顺序：类级 `#[Middleware]` → 路由注解 `middleware` → 方法级 `#[Middleware]`（自动去重）；
+- `#[Middleware(...)]` 可在同一类或方法上**重复声明**，所有实例都会被收集（叠多个不再被静默丢弃）。
+- 若某个属性无法实例化（如参数缺失/非法），`RouteScanner` 现在会抛出带上下文的 `RuntimeException`，而非静默忽略整条路由——问题会立即暴露。
 - 扫描目录取 `configs/http.php` 的 `routing.scan`，未配置时默认扫描 `App\Http\Controllers`；
 - 注解路由与声明文件路由同等参与冲突检测与缓存导出。
 

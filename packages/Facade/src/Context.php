@@ -14,6 +14,8 @@
  * @method static \Psr\Http\Message\ServerRequestInterface|null getRequest()
  * @method static void  setInput(\Sharky\Console\Context\Input $argvInput)
  * @method static \Sharky\Console\Context\Input|null           getInput()
+ * @method static void  setOutput(\Sharky\Console\Context\Output $output)
+ * @method static \Sharky\Console\Context\Output|null          getOutput()
  * @method static void  cancel()
  * @method static void  onCancel(callable $cb)
  * @method static bool  isCancelled()

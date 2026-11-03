@@ -54,6 +54,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 $request = Context::getRequest();          // 当前请求（ServerRequestInterface）
 Context::setRequest($request);             // 设置（内核在派发路由时已自动设置）
+$output  = Context::getOutput();           // 当前命令行 Output（内核在执行命令前已设置）
+Context::setOutput($output);               // 设置
 Context::get('trace_id', null);            // 自定义上下文值
 Context::set('trace_id', 'abc');
 ```

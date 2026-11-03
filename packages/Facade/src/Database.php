@@ -4,7 +4,7 @@
  *
  * 数据库门面
  *
- * @method static \Sharky\Database\Contracts\ConnectionInterface connect(string $connect)
+ * @method static \Sharky\Database\Contracts\ConnectionInterface connect(?string $connect = null)
  * @method static mixed                                       query(string $sql, array $params = [])
  * @method static int                                        execute(string $sql, array $params = [])
  * @method static bool                                       beginTransaction()

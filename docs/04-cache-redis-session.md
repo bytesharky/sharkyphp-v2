@@ -74,6 +74,9 @@ Redis::info();
 // Specify a node (master/slave other than the default connection)
 $conn = Redis::connect('slave');        // -> connection instance (Sharky\Redis\Contracts\ConnectionInterface)
 $conn->get('foo');
+
+// connect() with no argument also resolves to the first node of hosts (same as the default connection)
+$conn = Redis::connect();
 ```
 
 ## Session

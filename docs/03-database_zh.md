@@ -13,7 +13,7 @@ use Sharky\Database\Database;
 use Sharky\Database\Model;
 use Sharky\Facade\Config;
 
-$connection = Database::connect('master');   // 门面：默认连接 = hosts 第一个节点
+$connection = Database::connect();   // 不传参 = hosts 第一个节点；传名称可指定具体节点
 Model::setConnection($connection);
 ```
 
@@ -21,10 +21,12 @@ Model::setConnection($connection);
 
 ```php
 $db = new Database(Config::get('database.default'));
-$connection = $db->connect('master');
+$connection = $db->connect();   // 默认节点解析同上
 ```
 
 连接配置见 `configs/database.php`（`type` / `driver` / `hosts.{master,slave}` / `prefix` / `charset` 等）。
+
+> **连接韧性**：长连接失效（server has gone away、连接断开、broken pipe 等）时会自动重连，PDO 与 MySQLi 两个驱动均已支持。处于事务中不重连，以保原子性。
 
 ## 2. 模型（ActiveRecord）
 
@@ -80,7 +82,12 @@ User::query()->where(['id' => 1])->paginate(1, 20);    // 分页数组
 ->where(function ($q) {                             // 闭包 = 嵌套括号分组
     $q->where(['a' => 1])->orWhere(['b' => 2]);
 })
+->whereOr([['c' => 1], ['d' => 2]])                 // orWhere 的别名
+->whereIf($keyword !== '', ['name' => ['like', "%{$keyword}%"]])  // 仅当条件为真才追加
 ```
+
+- `where([])`（空数组）**静默忽略**——不生成 `WHERE` 子句，也不抛异常。这让常见的「可选过滤」写法（`$cond ? ['col' => $cond] : []`）无需先判空即可安全使用。
+- `whereIf($condition, $clause)` 仅当 `$condition` 为真才追加 `$clause`，适合可选过滤；`whereOr(...)` 是 `orWhere(...)` 的别名。
 
 支持的运算符：`= != <> > < >= <= & | ^ ~ << >> LIKE NOT LIKE`，以及 `IN / NOT IN`、`IS / IS NOT`、`BETWEEN / NOT BETWEEN`。值为 `null` 时 `=` / `!=` 自动转为 `IS NULL / IS NOT NULL`。
 
@@ -103,6 +110,7 @@ $u->delete();                                                // 删除当前记�
 
 - `save()` 根据是否存在主键与库中记录，自动选择 插入 / 更新，仅写入变化字段。
 - `$fillable` 控制 `save()` 批量赋值允许写入的字段。
+- 写入还会按**真实表字段**二次裁剪（不止 `$fillable`）：凡非实际表字段的键都会在生成 SQL 前被丢弃，多余的键不会再引发 `Unknown column` 错误。
 
 ### 模型对象
 
@@ -110,6 +118,23 @@ $u->delete();                                                // 删除当前记�
 - 序列化：`$u->toArray()`（隐藏 `$hidden` 字段）；实现 `JsonSerializable`，可直接 `json_encode`。
 - 从结果行构造：`User::newFromRow($row)`（联合查询时保留关联列）。
 - 元信息：`$u->getFields()`、`$u->getPrimarys()`、`$u->getTable()`、`$u->getFullTable()`。
+
+### 关联查询（join）
+
+`leftJoin` / `join` 接受 `[表名, 别名]` 形式。表名可以是 **模型类名**，会被自动解析为真实表名（含前缀），因此跨前缀 join 无需手工拼表名：
+
+```php
+use App\Models\Order;
+use App\Models\User;
+
+Order::query()
+    ->alias('o')
+    ->leftJoin([User::class, 'u'], 'u.id = o.user_id')
+    ->where(['u.status' => 1])
+    ->get();
+```
+
+误传非模型类名会给出清晰报错，而不是生成非法 SQL 表名。
 
 ## 3. Collection
 

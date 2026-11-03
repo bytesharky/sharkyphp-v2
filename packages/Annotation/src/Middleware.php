@@ -15,7 +15,7 @@ declare (strict_types = 1);
 
 namespace Sharky\Annotation;
 
-#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD)]
+#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
 class Middleware extends BaseAnnotation
 {
     public function __construct(public string $name)

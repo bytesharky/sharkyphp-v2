@@ -34,7 +34,7 @@ Available attributes:
 
 | Attribute | Target | Parameters |
 | --- | --- | --- |
-| `#[Controller(name)]` | Class / Method | `name`: controller name |
+| `#[Controller(name, prefix='')]` | Class / Method | `name`: controller name; `prefix` (optional): auto-prepended to every method route path under this controller |
 | `#[Route(path, method=[], middleware=[])]` | Method | path, method array, middleware array |
 | `#[Get(path, middleware=[])]` | Method | `method` fixed to `['Get']` |
 | `#[Post(path, middleware=[])]` | Method | `method` fixed to `['Post']` |
@@ -49,7 +49,7 @@ Available attributes:
 #[Permission(rule: 'user:read')]     // class- or method-level: declare required permission
 ```
 
-- `#[Middleware(name)]`: can act on a class (the whole controller) or a method (a single action); `name` is the middleware identifier.
+- `#[Middleware(name)]`: can act on a class (the whole controller) or a method (a single action); `name` is the middleware identifier. The attribute is `IS_REPEATABLE`, so multiple `#[Middleware(...)]` on the same class or method are all collected (stacking several no longer silently drops them).
 - `#[Permission(rule)]`: declares the permission rule string required at that point, to be consumed by the permission-check layer.
 
 ## Command Annotations

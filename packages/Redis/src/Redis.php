@@ -6,7 +6,7 @@
  *
  * 用法（与 Database 包完全一致）：
  *   $redis = new Redis(Config::get('redis.default'));
- *   $conn  = $redis->connect('master');   // ConnectionInterface
+ *   $conn  = $redis->connect();           // ConnectionInterface，默认取 hosts 第一个节点
  *   $conn->set('foo', 'bar', 60);
  *
  * 不做自动主从路由：所有便捷方法统一走「默认连接」，
@@ -60,8 +60,15 @@ final class Redis
      *
      * @throws InvalidArgumentException 节点未在 hosts 中定义
      */
-    public function connect(string $connect): ConnectionInterface
+    public function connect(?string $connect = null): ConnectionInterface
     {
+        if ($connect === null) {
+            $connect = array_key_first($this->config['hosts'] ?? []);
+            if ($connect === null) {
+                throw new RuntimeException('Redis hosts configuration is empty, cannot resolve default connection');
+            }
+        }
+
         if (array_key_exists($connect, $this->connects)) {
             return $this->connects[$connect];
         }
@@ -131,13 +138,7 @@ final class Redis
      */
     private function defaultConnect(): ConnectionInterface
     {
-        $firstKey = array_key_first($this->config['hosts'] ?? []);
-
-        if ($firstKey === null) {
-            throw new RuntimeException('Redis hosts configuration is empty, cannot resolve default connection');
-        }
-
-        return $this->connect($firstKey);
+        return $this->connect();
     }
 
     // ==================================================================

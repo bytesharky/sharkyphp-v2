@@ -1,6 +1,18 @@
 # 更新说明
 
-## 2026\-10\-XX 重大版本重构更新
+## 2026-11-04 v2.0.1 修复与优化
+
+在 2.0.0 基础上的框架修复与优化（无破坏性变更）：
+
+- **数据库连接韧性**：长连接失效（server has gone away / 连接断开）时自动重连，PDO 与 MySQLi 双驱动均已支持；处于事务中不重连，以保原子性。
+- **where 条件**：`where([])` 改为静默忽略，不再抛 `Invalid where parameter`；新增 `whereIf(condition, clause)` 与 `whereOr(...)` 便捷写法。
+- **join 支持模型类名**：`leftJoin([Model::class, 'alias'], ...)` 自动解析为真实表名（含前缀），跨前缀 join 无需 workaround；误传非模型类名会给出清晰报错。
+- **模型写入安全**：写入按真实表字段裁剪；补建此前缺失的 `InsecureExecuteException` 类。
+- **路由**：`#[Controller(prefix: '...')]` 支持可选前缀；`{param}` 占位符与 `(param:rule)` 并存；`#[Middleware]` 支持重复声明；RouteScanner 由静默吞错改为抛出带上下文异常。
+- **命令行与 HTTP**：`Output` 经容器注入；控制器方法可直接注入 `ServerRequestInterface`。
+- **其他**：`Foundation/composer.json` 声明 `sharkyphp/authorization` 依赖；CORS 读取配置 `http.response.cors.whitelist`；修复 `ExceptionHandler::render_web` 与 `ServerRequest::create`；`new` 命令复制 `.env` 模板。
+
+## 2026\-11\-03 v2.0.0 重大版本重构更新
 
 本次版本为框架全方位完整重构，核心优化架构与项目定位：将框架所有功能组件彻底拆分、封装为独立依赖库，同时主包从项目工程模式调整为类库模式，彻底实现框架内核与用户业务代码的完全隔离，架构更规范、解耦度更高。
 

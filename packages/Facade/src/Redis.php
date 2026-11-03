@@ -4,7 +4,7 @@
  *
  * Redis 门面
  *
- * @method static \Sharky\Redis\Contracts\ConnectionInterface connect(string $connect)
+ * @method static \Sharky\Redis\Contracts\ConnectionInterface connect(?string $connect = null)
  * @method static void                                       closeAll()
  * @method static void                                       disconnect(string $connect)
  * @method static string[]                                   getConnectedNames()

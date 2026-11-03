@@ -74,6 +74,9 @@ Redis::info();
 // 指定节点（默认连接外的 master/slave 等）
 $conn = Redis::connect('slave');        // -> 连接实例（Sharky\Redis\Contracts\ConnectionInterface）
 $conn->get('foo');
+
+// connect() 不传参也会解析为 hosts 第一个节点（即默认连接）
+$conn = Redis::connect();
 ```
 
 ## 会话（Session）

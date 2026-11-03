@@ -1,6 +1,18 @@
 # Update Log
 
-## 2026\-10\-XX Major Refactor Update
+## 2026-11-04 v2.0.1 Fixes & Improvements
+
+A batch of framework fixes and improvements on top of 2.0.0 (no breaking changes):
+
+- **DB connection resilience**: long-lived connections now auto-reconnect on "server has gone away" / lost-connection errors, for both PDO and MySQLi drivers. No reconnect is attempted inside an active transaction.
+- **`where` conditions**: `where([])` is now silently ignored instead of throwing `Invalid where parameter`. Added `whereIf(condition, clause)` and `whereOr(...)` helpers.
+- **Join with Model classes**: `leftJoin([Model::class, 'alias'], ...)` resolves to the real table (with prefix); cross-prefix joins no longer need a workaround. Non-model class names produce a clear error.
+- **Model write safety**: writes are filtered against real table columns; the missing `InsecureExecuteException` class was added.
+- **Routing**: `#[Controller(prefix: '...')]` optional prefix; `{param}` placeholders supported alongside `(param:rule)`; `#[Middleware]` is now repeatable; RouteScanner fails loudly instead of silently dropping middleware.
+- **Console & HTTP**: `Output` is injected via the container; `ServerRequestInterface` can be method-injected into controllers.
+- **Misc**: `Foundation/composer.json` declares `sharkyphp/authorization`; CORS reads `http.response.cors.whitelist`; `ExceptionHandler::render_web` and `ServerRequest::create` fixes; the `new` command copies an `.env` stub.
+
+## 2026\-11\-03 v2.0.0 Major Refactor Update
 
 This version is a comprehensive full refactor of the SharkyPHP framework\. All functional components are completely split into independent libraries\. Meanwhile, the main package has been converted from a project mode to a library mode, which fully isolates the framework core from user business code and realizes a more standardized and decoupled architecture\.
 
