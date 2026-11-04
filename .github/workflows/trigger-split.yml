@@ -53,8 +53,8 @@ jobs:
             -d '{"ref":"main"}')
           echo "dispatch http status: $http_code"
           cat /tmp/dispatch.json || true
-          # 202 = 已接受（正常）；否则视为失败
-          if [ "$http_code" != "202" ]; then
+          # 204 = 已接受（GitHub dispatches API 成功返回 204 No Content）；否则视为失败
+          if [ "$http_code" != "204" ]; then
             echo "::error::dispatch failed with status $http_code"
             exit 1
           fi
