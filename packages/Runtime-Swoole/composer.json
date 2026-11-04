@@ -23,7 +23,7 @@
         "sharkyphp/foundation": "^2.0.0"
     },
     "suggest": {
-        "ext-swoole": ">=5.0"
+        "ext-openswoole": ">=5.0"
     },
     "archive": {
         "exclude": [
