@@ -1,6 +1,6 @@
 # SharkyPHP
 
-SharkyPHP v2.0.0 is a lightweight, handwritten native PHP framework featuring a **dual-kernel separation design**: the HTTP kernel is dedicated to web requests and the CLI kernel to console commands. has zero third-party runtime dependencies, and is friendly for further extension.
+SharkyPHP is a lightweight, handwritten native PHP framework featuring a **dual-kernel separation design**: the HTTP kernel is dedicated to web requests and the CLI kernel to console commands. has zero third-party runtime dependencies, and is friendly for further extension.
 
 ## Overview
 

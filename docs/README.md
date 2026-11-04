@@ -1,8 +1,8 @@
 ← [中文版本](./README_zh.md)
 
-# SharkyPHP Framework Documentation (v2.0.0)
+# SharkyPHP Framework Documentation
 
-SharkyPHP v2.0.0 is a lightweight, handwritten native PHP framework featuring a **dual-kernel separation design**: the HTTP kernel is dedicated to web requests and the CLI kernel to console commands. All functional components are released as individual Composer packages with clear boundaries and loose coupling. It fully complies with PSR standard interfaces (PSR‑7 / PSR‑11 / PSR‑14 / PSR‑17 / PSR‑18 / PSR‑20, etc.), has zero third-party runtime dependencies, and is friendly for further extension.
+SharkyPHP is a lightweight, handwritten native PHP framework featuring a **dual-kernel separation design**: the HTTP kernel is dedicated to web requests and the CLI kernel to console commands. All functional components are released as individual Composer packages with clear boundaries and loose coupling. It fully complies with PSR standard interfaces (PSR‑7 / PSR‑11 / PSR‑14 / PSR‑17 / PSR‑18 / PSR‑20, etc.), has zero third-party runtime dependencies, and is friendly for further extension.
 
 > This documentation is written for **users**: it only describes the externally exposed usage of components (classes, methods, facades, attribute annotations). The framework's internal lifecycle details — how the kernel dispatches, binds, and initializes these components — are out of scope.
 
