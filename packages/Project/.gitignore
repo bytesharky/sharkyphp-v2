@@ -1,0 +1,9 @@
+/vendor/
+/runtime/
+.env
+
+# 本地 path 依赖清单：框架源码就在 ../framework 时用它安装
+# 用法：COMPOSER=composer.local.json composer update
+/composer.local.json
+/composer.local.lock
+/composer.lock

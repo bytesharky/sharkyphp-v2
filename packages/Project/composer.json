@@ -1,0 +1,23 @@
+{
+    "name": "sharkyphp/project",
+    "description": "A new SharkyPHP project.",
+    "type": "project",
+    "license": "proprietary",
+    "autoload": {
+        "psr-4": {
+            "App\\": "app"
+        }
+    },
+    "authors": [
+        {
+            "name": "bytesharky",
+            "email": "fish@doffish.com"
+        }
+    ],
+    "require": {
+        "sharkyphp/foundation": "^2.0.0"
+    },
+    "require-dev": {
+        "sharkyphp/skeleton": "^2.0.0"
+    }
+}
