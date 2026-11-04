@@ -1,0 +1,61 @@
+name: trigger-split
+
+# 事件驱动拆库：monorepo 一发版，立即触发 splitter 同步，不再等 hourly cron。
+# 放在 monorepo (bytesharky/sharkyphp-v2)。
+# 需要仓库 Secrets:
+#   SPLIT_REPO        目标 splitter 仓库，例如 sharkyphp/splitter
+#   SPLIT_TRIGGER_TOKEN  跨仓库 PAT，需 repo + workflow 权限（actions:write），且对 SPLIT_REPO 有写权限
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+    paths:
+      - 'packages/**'
+      - '.github/workflows/trigger-split.yml'
+
+# 同一次运行只允许一个实例；快速连续推送时取消上一次，避免刷爆 splitter
+concurrency:
+  group: trigger-split
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  dispatch:
+    # 只在真正的 monorepo 上跑，避免 fork 误触发
+    if: github.repository == 'bytesharky/sharkyphp-v2'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate secrets
+        env:
+          SPLIT_REPO: ${{ secrets.SPLIT_REPO }}
+          SPLIT_TRIGGER_TOKEN: ${{ secrets.SPLIT_TRIGGER_TOKEN }}
+        run: |
+          set -euo pipefail
+          : "${SPLIT_REPO:?请在 monorepo 设置 Secrets SPLIT_REPO (如 sharkyphp/splitter)}"
+          : "${SPLIT_TRIGGER_TOKEN:?请在 monorepo 设置 Secrets SPLIT_TRIGGER_TOKEN (跨仓库 PAT)}"
+
+      - name: Trigger splitter workflow_dispatch
+        env:
+          SPLIT_REPO: ${{ secrets.SPLIT_REPO }}
+          SPLIT_TRIGGER_TOKEN: ${{ secrets.SPLIT_TRIGGER_TOKEN }}
+          REF: ${{ github.ref }}
+        run: |
+          set -euo pipefail
+          echo "triggering split on $SPLIT_REPO (ref=$REF)"
+          http_code=$(curl -sS -o /tmp/dispatch.json -w '%{http_code}' \
+            -X POST \
+            "https://api.github.com/repos/${SPLIT_REPO}/actions/workflows/split.yml/dispatches" \
+            -H "Authorization: Bearer ${SPLIT_TRIGGER_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            -d '{"ref":"main"}')
+          echo "dispatch http status: $http_code"
+          cat /tmp/dispatch.json || true
+          # 202 = 已接受（正常）；否则视为失败
+          if [ "$http_code" != "202" ]; then
+            echo "::error::dispatch failed with status $http_code"
+            exit 1
+          fi
+          echo "split triggered successfully"
