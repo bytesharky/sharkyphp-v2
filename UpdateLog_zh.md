@@ -1,5 +1,14 @@
 # 更新说明
 
+## 2026-11-05 v2.0.2 修复与优化
+
+在 2.0.1 基础上的增量修复（无破坏性变更）：
+
+- **新增包 `sharkyphp/project`**：`sharky new` 默认生成的应用骨架。现已纳入主仓库并拆为独立只读子库，使起始项目与框架版本保持同步。
+- **Installer**：修复安装时组件版本解析失败的问题；对生成的项目模板视图做了微调。
+- **Runtime-Swoole**：`sharky serve swoole` 现通过 `extension_loaded('openswoole')` 正确检测 OpenSwoole（此前误用 `swoole`，在仅安装 OpenSwoole 时会误报"扩展未加载"）；composer `suggest` 键更正为 `ext-openswoole`，同样的修复也应用到项目骨架自带的 `serve` 脚本。
+- **CI**：主仓库现已在 push/tag 时触发拆库（事件驱动同步），发版后子库与 Packagist 即时更新，无需再等每小时定时。
+
 ## 2026-11-04 v2.0.1 修复与优化
 
 在 2.0.0 基础上的框架修复与优化（无破坏性变更）：

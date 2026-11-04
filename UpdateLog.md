@@ -1,5 +1,14 @@
 # Update Log
 
+## 2026-11-05 v2.0.2 Fixes & Improvements
+
+Incremental fixes on top of 2.0.1 (no breaking changes):
+
+- **New package `sharkyphp/project`**: the default application skeleton produced by `sharky new`. It is now part of the monorepo and split into its own read-only repository, so the starter project stays in lock-step with the framework version.
+- **Installer**: fixed component version resolving failure during installation; minor tweaks to the generated starter views/templates.
+- **Runtime-Swoole**: `sharky serve swoole` now correctly detects OpenSwoole via `extension_loaded('openswoole')` (previously it checked `swoole`, which is false when only OpenSwoole is installed, causing a false "extension missing" error). The composer `suggest` key was corrected to `ext-openswoole`. The same fix was applied to the `serve` script shipped in the project skeleton.
+- **CI**: monorepo now triggers the splitter on push/tag (event-driven sync), so sub-repos on Packagist update immediately on release instead of waiting for the hourly cron.
+
 ## 2026-11-04 v2.0.1 Fixes & Improvements
 
 A batch of framework fixes and improvements on top of 2.0.0 (no breaking changes):
